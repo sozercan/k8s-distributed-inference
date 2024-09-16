@@ -1,0 +1,7 @@
+version: v1
+mig-configs:
+  half-balanced:
+    - devices: [0]
+      mig-enabled: true
+      mig-devices:
+        "1g.10gb": 7
