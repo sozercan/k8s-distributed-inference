@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: localai-worker
+  labels:
+    app: localai-worker
+spec:
+  serviceName: "localai-worker-headless"  # Must match the headless service
+  replicas: 3  # Number of workers
+  selector:
+    matchLabels:
+      app: localai-worker
+  template:
+    metadata:
+      labels:
+        app: localai-worker
+    spec:
+      containers:
+      - name: localai-worker
+        image: localai/localai:latest-aio-cpu
+        ports:
+        - containerPort: 8000  # Worker port for llama-cpp-RPC
+        # command: ["local-ai"]
+        args: ["worker", "p2p-llama-cpp-rpc"]  # Modify memory and port as needed
+        env:
+        - name: "TOKEN"
+          value: "b3RwOgogIGRodDoKICAgIGludGVydmFsOiAzNjAKICAgIGtleTogVkxSdDdYbmtnU1l1RndLanhsZHBReEQ4djgxNWpoMzhrelZsRnFsWjFBeAogICAgbGVuZ3RoOiA0MwogIGNyeXB0bzoKICAgIGludGVydmFsOiA5MDAwCiAgICBrZXk6IENXRDNTMXBQZHFPN1VubXdFYlU4S3lPd0NQTG52cTRCMFNwOEFkUmtFRVEKICAgIGxlbmd0aDogNDMKcm9vbTogZjBQc05IaHRzeFF6bnpYeUIwamlPMXpJaHpEbG16eHlGUGVMa1l5TExYRApyZW5kZXp2b3VzOiBtcFZlY29GUGJFbm9rdzZXdHJNSkVTZ1ZCUUQxYkMzTlhSMW83cnI0b2xqCm1kbnM6IEFRRjhLSjU4SzFndmRsZEJjTmZPcHdrUWpqYkQ4eXhrSFgzYVk0OXlHRGsKbWF4X21lc3NhZ2Vfc2l6ZTogMjA5NzE1MjAK"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: localai-worker-headless
+spec:
+  selector:
+    app: localai-worker
+  clusterIP: None  # Headless service for stable pod DNS names
+  ports:
+    - name: grpc
+      port: 8000
+      targetPort: 8000
