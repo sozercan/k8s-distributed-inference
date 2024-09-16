@@ -20,7 +20,7 @@ spec:
         resourceClaimTemplateName: mig-devices
       containers:
       - name: localai-worker
-        image: localai/localai:latest-aio-cpu
+        image: localai/localai:latest-aio-gpu-nvidia-cuda-12
         ports:
         - containerPort: 8000  # Worker port for llama-cpp-RPC
         # command: ["local-ai"]

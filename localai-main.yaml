@@ -19,7 +19,7 @@ spec:
         resourceClaimTemplateName: mig-devices
       containers:
       - name: localai
-        image: localai/localai:latest-aio-cpu
+        image: localai/localai:latest-aio-gpu-nvidia-cuda-12
         ports:
         - containerPort: 8080  # HTTP port for API requests
         - containerPort: 9000  # P2P port for worker communication
