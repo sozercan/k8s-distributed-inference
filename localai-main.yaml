@@ -14,10 +14,17 @@ spec:
       labels:
         app: localai
     spec:
+      resourceClaims:
+      - name: mig-devices
+        resourceClaimTemplateName: mig-devices
       containers:
       - name: localai
-        image: localai/localai:latest-aio-cpu
+        image: localai/localai:latest-aio-gpu-nvidia-cuda-12
         ports:
         - containerPort: 8080  # HTTP port for API requests
         - containerPort: 9000  # P2P port for worker communication
         args: ["run", "--debug", "--p2ptoken=b3RwOgogIGRodDoKICAgIGludGVydmFsOiAzNjAKICAgIGtleTogVkxSdDdYbmtnU1l1RndLanhsZHBReEQ4djgxNWpoMzhrelZsRnFsWjFBeAogICAgbGVuZ3RoOiA0MwogIGNyeXB0bzoKICAgIGludGVydmFsOiA5MDAwCiAgICBrZXk6IENXRDNTMXBQZHFPN1VubXdFYlU4S3lPd0NQTG52cTRCMFNwOEFkUmtFRVEKICAgIGxlbmd0aDogNDMKcm9vbTogZjBQc05IaHRzeFF6bnpYeUIwamlPMXpJaHpEbG16eHlGUGVMa1l5TExYRApyZW5kZXp2b3VzOiBtcFZlY29GUGJFbm9rdzZXdHJNSkVTZ1ZCUUQxYkMzTlhSMW83cnI0b2xqCm1kbnM6IEFRRjhLSjU4SzFndmRsZEJjTmZPcHdrUWpqYkQ4eXhrSFgzYVk0OXlHRGsKbWF4X21lc3NhZ2Vfc2l6ZTogMjA5NzE1MjAK"]
+        resources:
+          claims:
+          - name: mig-devices
+            request: mig-1g-10gb
