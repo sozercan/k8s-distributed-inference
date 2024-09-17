@@ -121,6 +121,12 @@ In this step we will partition the GPU into multiple instances of GPU. Check the
 nvidia-smi
 ```
 
+If MIG is not enabled, you can enable it by running the following command:
+
+```bash
+sudo nvidia-smi -i 0 -mig 1
+```
+
 Your machine should have one NVIDIA A100 80GB if you have used the machine SKU as `Standard_NC24ads_A100_v4`. Following command partitions the GPU into 7 1g.10gb MIG devices with configuration in [mig-config.yaml](configs/mig-config.yaml).
 
 ```bash
@@ -157,7 +163,7 @@ pushd artifacts
 git clone https://github.com/NVIDIA/k8s-dra-driver.git
 
 pushd k8s-dra-driver
-git checkout 380045af634a39fc5311c6ad1379174a2c33cfb3
+git checkout 27c7532065489d292914b4754873fbe2f059fc51
 
 ./demo/clusters/kind/create-cluster.sh
 ./demo/clusters/kind/build-dra-driver.sh
