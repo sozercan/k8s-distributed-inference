@@ -9,6 +9,6 @@ spec:
     app: localai
   ports:
     - protocol: TCP
-      port: 80             # External port (reachable from outside)
+      port: 80              # External port (reachable from outside)
       targetPort: 8080      # The port where LocalAI listens inside the pod
   type: LoadBalancer        # Cloud provider-managed external LoadBalancer
