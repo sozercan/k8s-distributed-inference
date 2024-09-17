@@ -25,7 +25,7 @@ spec:
         args: ["worker", "p2p-llama-cpp-rpc"]
         env:
         - name: "TOKEN"
-          value: "b3RwOgogIGRodDoKICAgIGludGVydmFsOiAzNjAKICAgIGtleTogVkxSdDdYbmtnU1l1RndLanhsZHBReEQ4djgxNWpoMzhrelZsRnFsWjFBeAogICAgbGVuZ3RoOiA0MwogIGNyeXB0bzoKICAgIGludGVydmFsOiA5MDAwCiAgICBrZXk6IENXRDNTMXBQZHFPN1VubXdFYlU4S3lPd0NQTG52cTRCMFNwOEFkUmtFRVEKICAgIGxlbmd0aDogNDMKcm9vbTogZjBQc05IaHRzeFF6bnpYeUIwamlPMXpJaHpEbG16eHlGUGVMa1l5TExYRApyZW5kZXp2b3VzOiBtcFZlY29GUGJFbm9rdzZXdHJNSkVTZ1ZCUUQxYkMzTlhSMW83cnI0b2xqCm1kbnM6IEFRRjhLSjU4SzFndmRsZEJjTmZPcHdrUWpqYkQ4eXhrSFgzYVk0OXlHRGsKbWF4X21lc3NhZ2Vfc2l6ZTogMjA5NzE1MjAK"
+          value: "REPLACEME"
         resources:
           claims:
           - name: mig-devices
