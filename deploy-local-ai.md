@@ -9,7 +9,7 @@ kubectl apply -f configs/k8s/localai-svc.yaml # deploy localai svc to access das
 kubectl port-forward service/localai-loadbalancer 8080:80 # port-forward to launch localai dashboard
 ```
 
-Launch the localai dashboard and get token for psp: http://localhost:8080/p2p/
+Launch the localai dashboard and get token for p2p: http://localhost:8080/p2p/
 Copy the token and replace the following in configs/k8s/localai-workers.yaml before deployment
 > value: "REPLACEME"
 
