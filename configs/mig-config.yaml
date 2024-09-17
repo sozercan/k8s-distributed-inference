@@ -1,6 +1,6 @@
 version: v1
 mig-configs:
-  half-balanced:
+  gpu-slices-ten-gb:
     - devices: [0]
       mig-enabled: true
       mig-devices:
