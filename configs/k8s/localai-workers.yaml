@@ -5,7 +5,6 @@ metadata:
   labels:
     app: localai-worker
 spec:
-  serviceName: "localai-worker-headless"  # Must match the headless service
   replicas: 3  # Number of workers
   selector:
     matchLabels:
