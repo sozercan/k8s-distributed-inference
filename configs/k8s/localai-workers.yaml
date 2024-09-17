@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: localai-worker
   labels:
@@ -31,16 +31,3 @@ spec:
           claims:
           - name: mig-devices
             request: mig-1g-10gb
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: localai-worker-headless
-spec:
-  selector:
-    app: localai-worker
-  clusterIP: None  # Headless service for stable pod DNS names
-  ports:
-    - name: grpc
-      port: 8000
-      targetPort: 8000
