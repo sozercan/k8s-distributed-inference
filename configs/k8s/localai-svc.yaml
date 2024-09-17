@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: localai-loadbalancer
+  namespace: localai
   labels:
     app: localai
 spec:
@@ -9,6 +10,6 @@ spec:
     app: localai
   ports:
     - protocol: TCP
-      port: 80              # External port (reachable from outside)
+      port: 8080            # External port (reachable from outside)
       targetPort: 8080      # The port where LocalAI listens inside the pod
   type: LoadBalancer        # Cloud provider-managed external LoadBalancer

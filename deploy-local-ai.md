@@ -1,29 +1,40 @@
 # Deploy Local AI on Kubernetes
 
-Deploy the following in the default namesapce
-```bash
-kubectl apply -f configs/k8s/resource-claim-template.yaml # deploy ResourceClaimTemplate for mig devices
-kubectl apply -f configs/k8s/localai-main.yaml # deploy localai main component with p2p
-kubectl apply -f configs/k8s/localai-svc.yaml # deploy localai svc to access dashboard
-#confirm localai-deployment pod is running
-kubectl port-forward service/localai-loadbalancer 8080:80 # port-forward to launch localai dashboard
-```
-
-Launch the localai dashboard and get token for p2p: http://localhost:8080/p2p/
-Copy the token and replace the following in configs/k8s/localai-workers.yaml before deployment
-> value: "REPLACEME"
+Deploy the Local AI server:
 
 ```bash
-kubectl apply -f configs/k8s/localai-workers.yaml # deploy localai workers
+kubectl apply \
+    -f configs/k8s/localai-ns.yaml \
+    -f configs/k8s/resource-claim-template.yaml \
+    -f configs/k8s/localai-main.yaml \
+    -f configs/k8s/localai-svc.yaml
 ```
 
-Verify all localai workers are now part of the same localai swarm cluster
-From http://localhost:8080/p2p/, ensure there are 3/3 running workers.
+Once the server is up and running, expose the server locally:
 
-Verify resourceclaims have been created for all localai components
+```bash
+kubectl -n localai port-forward svc/localai-loadbalancer 8080:8080
+```
+
+Get the token so that we can deploy workers:
+
+```bash
+export TOKEN=$(curl http://localhost:8080/api/p2p/token)
+```
+
+Create secret for localai workers and deploy workers:
+
+```bash
+kubectl -n localai create secret generic localai-worker-token --from-literal=token=$TOKEN
+kubectl apply -f configs/k8s/localai-workers.yaml
+```
+
+Verify all localai workers are now part of the same localai swarm cluster by going to <http://localhost:8080/p2p/>, ensure there are 3/3 running workers.
+
+Verify resourceclaims have been created for all localai components:
 
 ```console
-kubectl get resourceclaims
+$ kubectl get resourceclaims
 NAME                                                   STATE                AGE
 localai-deployment-bcd8c9dcc-klhmr-mig-devices-kpb7l   allocated,reserved   1m
 localai-worker-69785c7775-8rqgl-mig-devices-8xj5l      allocated,reserved   1m
@@ -33,11 +44,13 @@ localai-worker-69785c7775-pmfn2-mig-devices-5z6bx      allocated,reserved   1m
 
 Verify all localai components are using the mig devices
 
-> nvidia-smi
+```bash
+nvidia-smi
+```
 
-Example output. Note: `processes` section below shows MIG device (GIID) used and memory consumed by each local ai component.
+Here is an example output:
 
-```bash       
+```bash
 +-----------------------------------------------------------------------------------------+
 | NVIDIA-SMI 560.35.03              Driver Version: 560.35.03      CUDA Version: 12.6     |
 |-----------------------------------------+------------------------+----------------------+
@@ -86,21 +99,24 @@ Example output. Note: `processes` section below shows MIG device (GIID) used and
 |=========================================================================================|
 |    0    8    0      16798      C   ...nd-assets/util/llama-cpp-rpc-server         74MiB |
 |    0   10    0      16808      C   ...nd-assets/util/llama-cpp-rpc-server         74MiB |
-|    0   11    0      16804      C   ...nd-assets/util/llama-cpp-rpc-server         74MiB 
+|    0   11    0      16804      C   ...nd-assets/util/llama-cpp-rpc-server         74MiB
 +-----------------------------------------------------------------------------------------+
 ```
 
+> [!NOTE]
+> `Processes:` section above shows MIG device (GIID) used and memory consumed by each local ai component.
+
 Verify all localai workers are serving inference requests
-From http://localhost:8080/browse/, choose a model then click `INSTALL` e.g. meta-llama-3.1-8b-instruct
-Once the model is done installing, go to http://localhost:8080/chat and select your model from the dropdown.
-Or navigate to the chat with the model directly. e.g http://localhost:8080/chat/meta-llama-3.1-8b-instruct
+From <http://localhost:8080/browse/>, choose a model then click `INSTALL` e.g. meta-llama-3.1-8b-instruct
+Once the model is done installing, go to <http://localhost:8080/chat> and select your model from the dropdown.
+Or navigate to the chat with the model directly. e.g <http://localhost:8080/chat/meta-llama-3.1-8b-instruct>
 
 Start a chat, first one will take sometime as it initilizes.
 After few chats
 
 > nvidia-smi
 
-```console                                                                             
+```console
 +-----------------------------------------------------------------------------------------+
 | Processes:                                                                              |
 |  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
