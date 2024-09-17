@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: localai-worker
+  namespace: localai
   labels:
     app: localai-worker
 spec:
@@ -22,10 +23,15 @@ spec:
         image: localai/localai:latest-aio-gpu-nvidia-cuda-12
         ports:
         - containerPort: 8000  # Worker port for llama-cpp-RPC
-        args: ["worker", "p2p-llama-cpp-rpc"]
+        args:
+        - worker
+        - p2p-llama-cpp-rpc
         env:
         - name: "TOKEN"
-          value: "REPLACEME"
+          valueFrom:
+            secretKeyRef:
+              name: localai-worker-token
+              key: token
         resources:
           claims:
           - name: mig-devices

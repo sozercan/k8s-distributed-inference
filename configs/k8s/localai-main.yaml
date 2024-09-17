@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: localai-deployment
+  namespace: localai
   labels:
     app: localai
 spec:
@@ -23,7 +24,12 @@ spec:
         ports:
         - containerPort: 8080  # HTTP port for API requests
         - containerPort: 9000  # P2P port for worker communication
-        args: ["run", "--debug", "--p2p"]
+        args:
+        - run
+        - --debug
+        - --p2p
+        - --address
+        - 0.0.0.0:8080
         resources:
           claims:
           - name: mig-devices
