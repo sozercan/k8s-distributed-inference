@@ -4,7 +4,7 @@ set -euo pipefail
 set -x
 
 function install_prereq_packages() {
-    sudo apt update
+    sudo apt update || true
     sudo apt install -y \
         jq bat hwinfo ubuntu-drivers-common \
         make apt-transport-https \
@@ -105,3 +105,4 @@ install_kind
 install_kubectl
 install_helm
 install_nvidia_toolkit
+install_nvidia_mig_manager

@@ -124,7 +124,10 @@ nvidia-smi
 Your machine should have one NVIDIA A100 80GB if you have used the machine SKU as `Standard_NC24ads_A100_v4`. Following command partitions the GPU into 7 1g.10gb MIG devices with configuration in [mig-config.yaml](configs/mig-config.yaml).
 
 ```bash
-sudo -E nvidia-mig-parted apply -f mig-config.yaml -c gpu-slices-ten-gb
+# This value is either Standard_NC24ads_A100_v4, Standard_NC48ads_A100_v4 or Standard_NC96ads_A100_v4.
+# Adjust this based on your machine type.
+export MIG_CONFIG="Standard_NC24ads_A100_v4"
+sudo -E nvidia-mig-parted apply -f configs/mig-config.yaml -c $MIG_CONFIG
 ```
 
 ```bash
@@ -200,6 +203,6 @@ Ensure that the Kubernetes control plane has picked up the MIGs we have created 
 
 ```bash
 kubectl get resourceslice -o json | jq -r \
-    '.items[0].spec.devices[] | .basic as $b | "MIG \($b.attributes.profile.string) Device \($b.attributes.index.int): (UUID: \($b.attributes.uuid.string))"' | \
-    sort -k3 -n
+    '.items[0].spec.devices[] | .basic as $b | "GPU \($b.attributes.parentIndex.int): MIG \($b.attributes.profile.string)    Device \($b.attributes.index.int): (UUID: \($b.attributes.uuid.string))"' | \
+    sort -k1 -n | sort -k3 -n
 ```

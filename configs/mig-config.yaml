@@ -1,7 +1,17 @@
 version: v1
 mig-configs:
-  gpu-slices-ten-gb:
+  Standard_NC24ads_A100_v4:
     - devices: [0]
+      mig-enabled: true
+      mig-devices:
+        "1g.10gb": 7
+  Standard_NC48ads_A100_v4:
+    - devices: [0, 1]
+      mig-enabled: true
+      mig-devices:
+        "1g.10gb": 7
+  Standard_NC96ads_A100_v4:
+    - devices: [0, 1, 2, 3]
       mig-enabled: true
       mig-devices:
         "1g.10gb": 7
