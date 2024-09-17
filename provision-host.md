@@ -124,7 +124,10 @@ nvidia-smi
 Your machine should have one NVIDIA A100 80GB if you have used the machine SKU as `Standard_NC24ads_A100_v4`. Following command partitions the GPU into 7 1g.10gb MIG devices with configuration in [mig-config.yaml](configs/mig-config.yaml).
 
 ```bash
-sudo -E nvidia-mig-parted apply -f mig-config.yaml -c gpu-slices-ten-gb
+# This value is either Standard_NC24ads_A100_v4, Standard_NC48ads_A100_v4 or Standard_NC96ads_A100_v4.
+# Adjust this based on your machine type.
+export MIG_CONFIG="Standard_NC24ads_A100_v4"
+sudo -E nvidia-mig-parted apply -f configs/mig-config.yaml -c $MIG_CONFIG
 ```
 
 ```bash
