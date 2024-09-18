@@ -58,6 +58,12 @@ function install_helm() {
     fi
 }
 
+function install_prometheus(){
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm repo update
+    helm install prometheus prometheus-community/prometheus
+}
+
 function install_gpu_operator() {
     helm repo add nvidia https://helm.ngc.nvidia.com/nvidia &&
         helm repo update
@@ -126,6 +132,7 @@ install_docker
 install_kind
 install_kubectl
 install_helm
+install_prometheus
 
 # Install based on the parsed flags
 if [[ "$install_gpu_operator_flag" == true ]]; then
