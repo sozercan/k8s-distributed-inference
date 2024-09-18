@@ -15,12 +15,10 @@ spec:
       labels:
         app: localai
     spec:
-      resourceClaims:
-      - name: mig-devices
-        resourceClaimTemplateName: mig-devices
       containers:
       - name: localai
-        image: localai/localai:latest-aio-gpu-nvidia-cuda-12
+        image: localai/localai:v2.20.1-cublas-cuda12-core
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080  # HTTP port for API requests
         - containerPort: 9000  # P2P port for worker communication
@@ -30,7 +28,15 @@ spec:
         - --p2p
         - --address
         - 0.0.0.0:8080
+        env:
+        - name: LLAMACPP_PARALLEL
+          value: "10"
+        - name: LOCALAI_PARALLEL_REQUESTS
+          value: "true"
+        - name: PARALLEL_REQUEST
+          value: "true"
         resources:
-          claims:
-          - name: mig-devices
-            request: mig-1g-10gb
+          limits:
+            nvidia.com/gpu: 1
+          requests:
+            nvidia.com/gpu: 1

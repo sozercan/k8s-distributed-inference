@@ -5,7 +5,6 @@ Deploy the Local AI server:
 ```bash
 kubectl apply \
     -f configs/k8s/localai-ns.yaml \
-    -f configs/k8s/resource-claim-template.yaml \
     -f configs/k8s/localai-main.yaml \
     -f configs/k8s/localai-svc.yaml
 ```
@@ -13,7 +12,7 @@ kubectl apply \
 Once the server is up and running, expose the server locally:
 
 ```bash
-kubectl -n localai port-forward svc/localai-loadbalancer 8080:8080
+kubectl -n localai port-forward svc/localai 8080:8080
 ```
 
 Get the token so that we can deploy workers:

@@ -15,12 +15,9 @@ spec:
       labels:
         app: localai-worker
     spec:
-      resourceClaims:
-      - name: mig-devices
-        resourceClaimTemplateName: mig-devices
       containers:
       - name: localai-worker
-        image: localai/localai:latest-aio-gpu-nvidia-cuda-12
+        image: localai/localai:v2.20.1-cublas-cuda12-core
         ports:
         - containerPort: 8000  # Worker port for llama-cpp-RPC
         args:
@@ -33,6 +30,7 @@ spec:
               name: localai-worker-token
               key: token
         resources:
-          claims:
-          - name: mig-devices
-            request: mig-1g-10gb
+          limits:
+            nvidia.com/gpu: 1
+          requests:
+            nvidia.com/gpu: 1
