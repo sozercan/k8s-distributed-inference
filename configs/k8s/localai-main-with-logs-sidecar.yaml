@@ -32,7 +32,7 @@ spec:
         env:
         - name: ENABLE_SIDECAR
           value: "true"
-      # Sidecar container that is conditionally active
+      # Sidecar container for tailing log and getting n_tokens_second
       - name: logs-sidecar
         image: busybox
         ports:
