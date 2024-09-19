@@ -25,7 +25,7 @@ spec:
         - /bin/sh
         - -c
         - |
-          local-ai run --debug --p2p --address 0.0.0.0:8080 > /var/log/localai/localai.log 2>&1
+          /build/local-ai run --debug --p2p --address 0.0.0.0:8080 > /var/log/localai/localai.log 2>&1
         volumeMounts:
         - name: log-volume
           mountPath: /var/log/localai
