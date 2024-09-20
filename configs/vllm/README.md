@@ -4,10 +4,12 @@ This guide provides steps to deploy vLLM inference on an Azure Kubernetes Servic
 
 ## Prerequisites
 
-- **AKS Cluster**: Ensure your AKS cluster has GPU nodes (N-series) enabled.
+- **AKS Cluster**: Ensure your AKS cluster has GPU nodes (N-series) enabled. For distributed inference, use a multi-GPU node (like certain A100/H100 instance types). 
 - **NVIDIA GPU Operator**: Installed and managing the GPU resources.
 - **kubectl**: Installed and configured to interact with your AKS cluster.
-- **Huggingface/Meta model access**: Permission for the models you want to deploy.
+- **Huggingface/Meta model access**: Permission for the models you want to deploy, if necessary.
+
+Note: vLLM does not seem to distribute weights with multi instance GPUs out of the box. There are may be workarounds, as described [here](https://docs.vllm.ai/en/latest/serving/distributed_serving.html#multi-node-inference-and-serving)
 
 ## Step 1: Create the Namespace
 
@@ -23,9 +25,10 @@ kubectl create namespace vllm-ns
 
 Save the deployment configuration to vllm_med.yaml.
 Apply the deployment:
-bash
-Copy code
+
+```
 kubectl apply -f vllm_med.yaml
+```
 This deployment will set up a vLLM model server that splits the model across two GPUs.
 
 # Step 3: Expose the vLLM Service
