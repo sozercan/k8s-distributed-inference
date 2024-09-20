@@ -34,12 +34,12 @@ Verify all localai workers are now part of the same localai swarm cluster by goi
 Verify resourceclaims have been created for all localai components:
 
 ```console
-$ kubectl get resourceclaims
-NAME                                                   STATE                AGE
-localai-deployment-bcd8c9dcc-klhmr-mig-devices-kpb7l   allocated,reserved   1m
-localai-worker-69785c7775-8rqgl-mig-devices-8xj5l      allocated,reserved   1m
-localai-worker-69785c7775-c2smf-mig-devices-5jtpb      allocated,reserved   1m
-localai-worker-69785c7775-pmfn2-mig-devices-5z6bx      allocated,reserved   1m
+$ kubectl get resourceclaims -n localai
+NAMESPACE   NAME                                                   STATE                AGE
+localai     localai-deployment-f85c4b486-wqqmw-mig-devices-h2hr8   allocated,reserved   33m
+localai     localai-worker-64cb9bf6f6-969pl-mig-devices-5sd9c      allocated,reserved   88s
+localai     localai-worker-64cb9bf6f6-bbjzw-mig-devices-9qxzg      allocated,reserved   88s
+localai     localai-worker-64cb9bf6f6-vsg6b-mig-devices-6x6h5      allocated,reserved   88s
 ```
 
 Verify all localai components are using the mig devices
