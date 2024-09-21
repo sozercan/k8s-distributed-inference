@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: localai-deployment
+  namespace: localai
+  labels:
+    app: localai
+spec:
+  replicas: 1  # Single instance of the main LocalAI
+  selector:
+    matchLabels:
+      app: localai
+  template:
+    metadata:
+      labels:
+        app: localai
+    spec:
+      containers:
+      - name: localai
+        image: localai/localai:latest-aio-gpu-nvidia-cuda-12
+        ports:
+        - containerPort: 8080  # HTTP port for API requests
+        - containerPort: 9000  # P2P port for worker communication
+        command:
+        - /bin/sh
+        - -c
+        - |
+          /build/local-ai run --debug --p2p --address 0.0.0.0:8080 > /var/log/localai/localai.log 2>&1
+        volumeMounts:
+        - name: log-volume
+          mountPath: /var/log/localai
+        env:
+        - name: ENABLE_SIDECAR
+          value: "true"
+      # Sidecar container that is conditionally active
+      - name: logs-sidecar
+        image: busybox
+        ports:
+        - containerPort: 8081  # Metrics port for the sidecar
+        volumeMounts:
+        - name: log-volume
+          mountPath: /var/log/localai
+        env:
+        - name: ENABLE_SIDECAR
+          value: "true"  # Explicitly set the same environment variable in the sidecar
+        # Grep and Tail the most recent occurence of n_tokens_second
+        # Response back with the latest value on port 8081
+        command:
+        - /bin/sh
+        - -c
+        - |
+          if [ "$(echo $ENABLE_SIDECAR)" = "true" ]; then
+            while true; do
+              n_tokens_second=$(grep -o '"n_tokens_second":[^,]*' /var/log/localai/localai.log | tail -n1 | awk -F':' '{print $2}')
+              echo -e "HTTP/1.1 200 OK\n\n$n_tokens_second" | nc -l -p 8081;
+            done;
+          else
+            echo "Sidecar not enabled";
+            sleep 3600;
+          fi
+      volumes:
+      - name: log-volume
+        emptyDir: {}  # Shared volume to store logs
